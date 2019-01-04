@@ -1,4 +1,10 @@
-all: pancakes.pdf
+RECIPES = pancakes
+
+MDS = $(RECIPES:=.md)
+HTMLS = $(RECIPES:=.html)
+PDFS = $(RECIPES:=.pdf)
+
+all: $(PDFS)
 
 %.html: %.md recipe.lua recipe.html
 	pandoc --standalone --lua-filter recipe.lua --template recipe.html --to html5 --output $@ $<
@@ -7,6 +13,6 @@ all: pancakes.pdf
 	prince --style recipe.css --output $@ $<
 
 clean:
-	rm -f pancakes.html pancakes.pdf
+	rm -f $(HTMLS) $(PDFS)
 
 .PRECIOUS: %.html
