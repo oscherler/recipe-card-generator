@@ -81,3 +81,21 @@ header .title-image-container
 		}
 	}
 }
+
+h1
+{
+	font-size: 12pt;
+	font-weight: 600;
+	
+	color: #004080;
+	
+	padding-bottom: 3.8pt;
+	border-bottom: 1pt solid #004080;
+	
+	column-span: all;
+}
+
+.ingredients
+{
+	column-count: 2;
+}
