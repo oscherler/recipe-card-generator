@@ -47,7 +47,12 @@ $include-before$
 $endfor$
 $if(title)$
 <header>
-<h1 class="title">$title$</h1>
+<h1 class="title"><span class="content">$title$</span></h1>
+$if(image)$
+<div class="title-image-container">
+	<img src="$image$" class="title-image $if(image_class)$$image_class$$else$fit-both$endif$"/>
+</div>
+$endif$
 $if(subtitle)$
 <p class="subtitle">$subtitle$</p>
 $endif$

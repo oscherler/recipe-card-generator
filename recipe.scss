@@ -1,0 +1,85 @@
+@page
+{
+	size: a6;
+	margin: 7mm;
+}
+
+body
+{
+	font-family: Baskerville;
+	font-size: 9pt;
+}
+
+header .title
+{
+	position: relative;
+
+	font-size: 32pt;
+	font-weight: normal;
+
+	text-align: center;
+
+	color: #004080;
+	
+	border: 2pt solid;
+	border-style: solid none;
+	
+	box-sizing: border-box;
+	height: 37mm;
+	
+	margin: 0 0 7mm 0;
+
+	.content
+	{
+		display: block;
+		position: absolute;
+
+		top: 50%;
+		left: 0;
+		right: 0;
+
+		transform: translatey( -50% );
+	}
+}
+
+
+header .title-image-container
+{
+	position: relative;
+
+	height: 90mm;
+	overflow: hidden;
+	
+	background: #f88;
+
+	.title-image
+	{
+		display: block;
+
+		position: absolute;
+
+		top: 50%;
+		left: 50%;
+
+		transform: translate( -50%, -50% );
+		
+		&.fit,
+		&.fit-both
+		{
+			max-width: 100%;
+			max-height: 100%;
+		}
+		
+		&.fit-width
+		{
+			width: 100%;
+			height: auto;
+		}
+		
+		&.fit-height
+		{
+			width: auto;
+			height: 100%;
+		}
+	}
+}

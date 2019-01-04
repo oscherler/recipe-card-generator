@@ -6,6 +6,9 @@ PDFS = $(RECIPES:=.pdf)
 
 all: $(PDFS)
 
+recipe.css: recipe.scss
+	scss $< $@
+
 %.html: %.md recipe.lua recipe.html
 	pandoc --standalone --lua-filter recipe.lua --template recipe.html --to html5 --output $@ $<
 
