@@ -2,10 +2,10 @@
 title: Toto
 ---
 
-# Ingredients
+# Ingredients {.ingredients}
 
 asfd
 
-# Directions
+# Directions {.directions}
 
 tzu
