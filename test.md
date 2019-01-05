@@ -2,32 +2,27 @@
 title: Toto
 ---
 
-dsfsdf
-
-sdf
-
-gfhgf
-
 # Ingredients {.ingredients}
 
-asfd
+* _12_ thingies
+* _2_ foos
 
-# Directions {.directions}
+  ert
 
-tzu
+* stuff
+* _1_ bar
 
-# Foo
+*****
 
-dsfdg
+* _12 gram_ thingies
 
-dfgfdg
+* _2_ foos
 
-# Bar {.toto .tata}
+* stuff
 
-dsfsdf
+* _1_ bar
 
-sdfdsf
-
-* dfdf
-* dfd
-* tr
+foo | bar
+----|----
+toto|1
+tata|2
