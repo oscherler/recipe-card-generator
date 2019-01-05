@@ -33,19 +33,12 @@ function doc( $doc )
 			if( count( $currentSection ) > 0 )
 			{
 				$currentClasses[] = 'section';
-				$newDoc[] = div( $currentClasses, $currentSection );
+				$newDoc[] = div( classes( $currentClasses ), $currentSection );
 				$currentSection = [];
 			}
 
-			if( isset( $block->c[1][1] ) )
-			{
-				$currentClasses = $block->c[1][1];
-				$block->c[1][1] = [];
-			}
-			else
-			{
-				$currentClasses = [];
-			}
+			$currentClasses = $block->c[1][1];
+			$block->c[1][1] = [];
 		}
 		
 		$currentSection[] = $block;
@@ -54,7 +47,7 @@ function doc( $doc )
 	if( count( $currentSection ) > 0 )
 	{
 		$currentClasses[] = 'section';
-		$newDoc[] = div( $currentClasses, $currentSection );
+		$newDoc[] = div( classes( $currentClasses ), $currentSection );
 		$currentSection = [];
 	}
 
@@ -63,13 +56,27 @@ function doc( $doc )
 	return $doc;
 }
 
-function div( $classes, $content )
+function div( $attrs, $content )
 {
 	return [
 		't' => 'Div',
 		'c' => [
-			[ '', $classes, [] ],
+			$attrs,
 			$content
 		]
 	];
+}
+
+function attrs( $id, $classes, $attrs )
+{
+	return [
+		$id,
+		$classes,
+		$attrs
+	];
+}
+
+function classes( $classes )
+{
+	return attrs( '', $classes, [] );
 }
