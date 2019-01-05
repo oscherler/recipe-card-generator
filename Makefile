@@ -8,10 +8,11 @@ master: test.md
 	pandoc --standalone --output master.json $<
 	pandoc --standalone --output master.filtered.json --lua-filter recipe.lua $<
 
-test: test.md
+test: test.md master
 	pandoc --standalone --output test.json $<
 	php recipe.php < test.json > test.filtered.json
 	pandoc --standalone --template recipe.html --to html5 --output test.html test.filtered.json
+	diff -u master.filtered.json test.filtered.json
 
 all: $(PDFS)
 
