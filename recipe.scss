@@ -90,6 +90,8 @@ h1
 	font-size: 12pt;
 	font-weight: $semibold;
 	
+	margin: 1em 0;
+	
 	color: $accent;
 	
 	padding-bottom: 3.8pt;
@@ -101,4 +103,52 @@ h1
 .ingredients
 {
 	column-count: 2;
+	
+	table
+	{
+		tr > td:first-child
+		{
+			padding-right: 0.5em;
+			text-align: center;
+
+			font-weight: $semibold;
+			color: $accent;
+		}
+		
+		p
+		{
+			margin: 0;
+		}
+	}
+}
+
+.directions
+{
+	ul
+	{
+		margin: 0;
+		padding: 0 0 0 1em;
+		
+		list-style-type: square;
+		
+		li
+		{
+			margin: 0.5em 0;
+			padding: 0;
+			
+			&::marker
+			{
+				width: 1em;
+				padding: 0;
+				text-align: left;
+
+				color: $accent;
+			}
+			
+			p
+			{
+				margin: 0;
+			}
+		}
+	}
 }

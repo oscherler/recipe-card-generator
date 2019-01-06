@@ -1,6 +1,8 @@
 RECIPES = pancakes
 
 MDS = $(RECIPES:=.md)
+JSONS = $(RECIPES:=.json)
+FJSONS = $(RECIPES:=.filtered.json)
 HTMLS = $(RECIPES:=.html)
 PDFS = $(RECIPES:=.pdf)
 
@@ -19,13 +21,19 @@ all: $(PDFS)
 recipe.css: recipe.scss
 	scss $< $@
 
-%.html: %.md recipe.lua recipe.html
-	pandoc --standalone --lua-filter recipe.lua --template recipe.html --to html5 --output $@ $<
+%.json: %.md
+	pandoc --standalone --output $@ $<
+
+%.filtered.json: %.json recipe.php
+	php recipe.php < $< > $@
+
+%.html: %.filtered.json recipe.html
+	pandoc --standalone --template recipe.html --to html5 --output $@ $<
 
 %.pdf: %.html recipe.css
 	prince --style recipe.css --output $@ $<
 
 clean:
-	rm -f $(HTMLS) $(PDFS)
+	rm -f $(HTMLS) $(PDFS) $(JSONS) $(FJSONS)
 
 .PRECIOUS: %.html %.json %.filtered.json
