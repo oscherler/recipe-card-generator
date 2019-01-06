@@ -12,14 +12,14 @@ time: { prep: 5 mins, total: 20 mins }
 
 # Ingredients {.ingredients}
 
-* 1 cup Flour
-* 2 tbsp Sugar
-* 2 tsp Baking powder
-* 1/2 tsp Salt
-* 1 cup Milk
-* 2 tbsp Butter, melted, or vegetable oil
-* 1 Large egg
-* 1 tbsp Vegetable oil
+* _1 cup_ Flour
+* _2 tbsp_ Sugar
+* _2 tsp_ Baking powder
+* _1/2 tsp_ Salt
+* _1 cup_ Milk
+* _2 tbsp_ Butter, melted, or vegetable oil
+* _1_ Large egg
+* _1 tbsp_ Vegetable oil
 * Assorted toppings
 
 # Directions {.directions}
