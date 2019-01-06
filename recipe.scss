@@ -1,3 +1,6 @@
+$accent: #004080;
+$semibold: 600;
+
 @page
 {
 	size: a6;
@@ -19,9 +22,9 @@ header .title
 
 	text-align: center;
 
-	color: #004080;
+	color: $accent;
 	
-	border: 2pt solid;
+	border: 2pt $accent;
 	border-style: solid none;
 	
 	box-sizing: border-box;
@@ -85,12 +88,12 @@ header .title-image-container
 h1
 {
 	font-size: 12pt;
-	font-weight: 600;
+	font-weight: $semibold;
 	
-	color: #004080;
+	color: $accent;
 	
 	padding-bottom: 3.8pt;
-	border-bottom: 1pt solid #004080;
+	border-bottom: 1pt solid $accent;
 	
 	column-span: all;
 }
