@@ -48,11 +48,11 @@ $endfor$
 $if(title)$
 <header>
 <h1 class="title"><span class="content">$title$</span></h1>
-$if(image)$
 <div class="title-image-container">
-	<img src="$image$" class="title-image $if(image_class)$$image_class$$else$fit-height$endif$"/>
-</div>
+$if(image)$
+	<img src="$image_path$/$image$" class="title-image $if(image_class)$$image_class$$else$fit-height$endif$" $if(image_style)$style="$image_style$"$endif$/>
 $endif$
+</div>
 $if(subtitle)$
 <p class="subtitle">$subtitle$</p>
 $endif$

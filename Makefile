@@ -1,39 +1,33 @@
-RECIPES = pancakes
+ASSET_DIR = assets
+RECIPE_DIR = recipes
+IMAGES_DIR = images
+TEMP_DIR = tmp
+CARDS_DIR = cards
 
-MDS = $(RECIPES:=.md)
-JSONS = $(RECIPES:=.json)
-FJSONS = $(RECIPES:=.filtered.json)
-HTMLS = $(RECIPES:=.html)
-PDFS = $(RECIPES:=.pdf)
+CSS_NAME = recipe
+SCSS = $(ASSET_DIR)/$(CSS_NAME).scss
+CSS = $(ASSET_DIR)/$(CSS_NAME).css
+FILTER = $(ASSET_DIR)/recipe.php
+CARD_TEMPLATE = $(ASSET_DIR)/recipe.card.html
+IMAGE_PATH = ../$(IMAGES_DIR)
 
-master: test.md
-	pandoc --standalone --output master.json $<
-	pandoc --standalone --output master.filtered.json --lua-filter recipe.lua $<
-
-test: test.md master
-	pandoc --standalone --output test.json $<
-	php recipe.php < test.json > test.filtered.json
-	pandoc --standalone --template recipe.html --to html5 --output test.html test.filtered.json
-	diff -u master.filtered.json test.filtered.json
+RECIPES = $(wildcard $(RECIPE_DIR)/*.md)
+HTMLS = $(patsubst $(RECIPE_DIR)/%.md,$(TEMP_DIR)/%.html,$(RECIPES))
+PDFS = $(patsubst $(RECIPE_DIR)/%.md,$(CARDS_DIR)/%.pdf,$(RECIPES))
 
 all: $(PDFS)
 
-recipe.css: recipe.scss
+$(CSS): $(SCSS)
 	scss $< $@
 
-%.json: %.md
-	pandoc --standalone --output $@ $<
+$(TEMP_DIR)/%.html: $(RECIPE_DIR)/%.md $(FILTER) $(CARD_TEMPLATE)
+	pandoc --standalone --filter $(FILTER) --template $(CARD_TEMPLATE) --variable image_path:$(IMAGE_PATH) --to html5 --output $@ $<
 
-%.filtered.json: %.json recipe.php
-	php recipe.php < $< > $@
-
-%.html: %.filtered.json recipe.html
-	pandoc --standalone --template recipe.html --to html5 --output $@ $<
-
-%.pdf: %.html recipe.css
-	prince --style recipe.css --output $@ $<
+$(CARDS_DIR)/%.pdf: $(TEMP_DIR)/%.html $(CSS)
+	prince --style $(CSS) --output $@ $<
 
 clean:
-	rm -f $(HTMLS) $(PDFS) $(JSONS) $(FJSONS)
+	rm -f $(HTMLS) $(PDFS)
 
-.PRECIOUS: %.html %.json %.filtered.json
+.PRECIOUS: $(TEMP_DIR)/%.html
+
