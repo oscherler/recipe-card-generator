@@ -1,6 +1,8 @@
 <?php
 
-function var_error_log( $object=null ){
+$jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+
+function var_error_log( $object = null ){
 	ob_start();
 	var_dump( $object );
 	$contents = ob_get_contents();
@@ -10,95 +12,48 @@ function var_error_log( $object=null ){
 
 $doc = json_decode( file_get_contents('php://stdin') );
 
-#var_error_log( $doc );
+$format = '';
+$action = function( $t, $c, $format, $meta, &$userData ) {
+	if( $t === 'Header' && $c[0] === 1 )
+	{
+		$userData['currentClasses'] = $c[1][1];
+	}
+	
+	if( $t === 'BulletList' && in_array( 'ingredients', $userData['currentClasses'] ) )
+	{
+		$rows = [];
+		
+		foreach( $c as $item_blocks )
+		{
+			foreach( $item_blocks as $item_block )
+			{
+				list( $quantity, $ingredient ) = unitise( $item_block );
+				$rows[] = [ [ $quantity ], [ $ingredient ] ];
+			}
+		}
+		
+		return Table(
+			[ '', '' ],
+			$rows
+		);
+	}
+};
 
-$altered = doc( $doc );
+$meta = isset( $doc->meta )
+	? $doc->meta
+	: ( isset( $doc[0] ) && isset( $doc[0]->unMeta ) ? $doc[0]->unMeta : null );
 
-#var_error_log( $altered );
+$altered = walk(
+	$doc,
+	$action,
+	$format,
+	$meta,
+	[ 'currentClasses' => [] ]
+);
 
-$json = json_encode( $altered, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+$json = json_encode( $altered, $jsonFlags );
 	
 echo $json;
-
-function doc( $doc )
-{
-	$currentSection = [];
-	$currentClasses = [];
-	$newDoc = [];	
-	
-	foreach( $doc->blocks as $block )
-	{
-		if( $block->t === 'Header' && $block->c[0] === 1 )
-		{
-			if( count( $currentSection ) > 0 )
-			{
-				$currentClasses[] = 'section';
-				$newDoc[] = div( classes( $currentClasses ), $currentSection );
-				$currentSection = [];
-			}
-
-			$currentClasses = $block->c[1][1];
-			$block->c[1][1] = [];
-		}
-		
-		if( $block->t === 'BulletList' && in_array( 'ingredients', $currentClasses ) )
-		{
-			$rows = [];
-			
-			foreach( $block->c as $item_blocks )
-			{
-				foreach( $item_blocks as $item_block )
-				{
-					list( $quantity, $ingredient ) = unitise( $item_block );
-					$rows[] = [ [ $quantity ], [ $ingredient ] ];
-				}
-			}
-			
-			$block = table(
-				[ '', '' ],
-				$rows
-			);
-		}
-		
-		$currentSection[] = $block;
-	}
-	
-	if( count( $currentSection ) > 0 )
-	{
-		$currentClasses[] = 'section';
-		$newDoc[] = div( classes( $currentClasses ), $currentSection );
-		$currentSection = [];
-	}
-
-	$doc->blocks = $newDoc;
-
-	return $doc;
-}
-
-function div( $attrs, $content )
-{
-	return [
-		't' => 'Div',
-		'c' => [
-			$attrs,
-			$content
-		]
-	];
-}
-
-function attrs( $id, $classes, $attrs )
-{
-	return [
-		$id,
-		$classes,
-		$attrs
-	];
-}
-
-function classes( $classes )
-{
-	return attrs( '', $classes, [] );
-}
 
 function unitise( $block )
 {
@@ -118,18 +73,28 @@ function unitise( $block )
 	return [ $quantity, $block ];
 }
 
-function table( $headers, $rows )
+function TableAlign( $type = 'AlignDefault' )
+{
+	return (object)[ 't' => $type ];
+}
+
+function Str( $string )
+{
+	return (object)[ 't' => 'Str', 'c' => $string ];
+}
+
+function Plain( array $blocks )
+{
+	return (object)[ 't' => 'Plain', 'c' => $blocks ];
+}
+
+function Table( $headers, $rows )
 {
 	$cols = count( $headers );
-	$aligns = array_fill( 0, $cols, [ 't' => 'AlignDefault' ] );
+	$aligns = array_fill( 0, $cols, TableAlign() );
 	$widths = array_fill( 0, $cols, 0 );
 	$headers = array_map( function( $header ) {
-		return [
-			[
-				't' => 'Plain',
-				'c' => [ [ 't' => 'Str', 'c' => $header ] ]
-			]
-		];
+		return [ Plain( [ Str( $header ) ] ) ];
 	}, $headers );
 	
 	$c = [
@@ -140,7 +105,7 @@ function table( $headers, $rows )
 		$rows
 	];
 	
-	return [
+	return (object)[
 		't' => 'Table',
 		'c' => $c
 	];

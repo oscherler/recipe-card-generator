@@ -15,13 +15,15 @@ RECIPES = $(wildcard $(RECIPE_DIR)/*.md)
 HTMLS = $(patsubst $(RECIPE_DIR)/%.md,$(TEMP_DIR)/%.html,$(RECIPES))
 PDFS = $(patsubst $(RECIPE_DIR)/%.md,$(CARDS_DIR)/%.pdf,$(RECIPES))
 
-all: $(PDFS)
+all: cards
+
+cards: $(PDFS)
 
 $(CSS): $(SCSS)
 	scss $< $@
 
 $(TEMP_DIR)/%.html: $(RECIPE_DIR)/%.md $(FILTER) $(CARD_TEMPLATE)
-	pandoc --standalone --filter $(FILTER) --template $(CARD_TEMPLATE) --variable image_path:$(IMAGE_PATH) --to html5 --output $@ $<
+	pandoc --standalone --section-divs --filter $(FILTER) --template $(CARD_TEMPLATE) --variable image_path:$(IMAGE_PATH) --to html5 --output $@ $<
 
 $(CARDS_DIR)/%.pdf: $(TEMP_DIR)/%.html $(CSS)
 	prince --style $(CSS) --output $@ $<
