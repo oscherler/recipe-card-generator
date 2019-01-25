@@ -27,9 +27,12 @@ $(TEMP_DIR)/%.html: $(RECIPE_DIR)/%.md $(FILTER) $(CARD_TEMPLATE)
 
 $(CARDS_DIR)/%.pdf: $(TEMP_DIR)/%.html $(CSS)
 	prince --style $(CSS) --output $@ $<
+	./nup.bash $@
 
 clean:
 	rm -f $(HTMLS) $(PDFS)
 
 .PRECIOUS: $(TEMP_DIR)/%.html
 
+debug:
+	$(info $(HTMLS_FOR_INDEX))

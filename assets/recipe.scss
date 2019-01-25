@@ -104,6 +104,11 @@ h1
 {
 	column-count: 2;
 	
+	body.long &
+	{
+		page-break-after: always;
+	}
+	
 	table
 	{
 		td

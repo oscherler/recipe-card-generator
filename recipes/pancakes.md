@@ -8,6 +8,7 @@ source:
 tags: breakfast
 serves: 4
 time: { prep: 5 mins, total: 20 mins }
+layout: long
 ---
 
 # Ingredients {.ingredients}
