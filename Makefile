@@ -1,3 +1,8 @@
+DOCKER = docker run --rm --volume "$(shell pwd):/data" recipe:latest
+PANDOC = $(DOCKER) pandoc
+PRINCE = $(DOCKER) prince
+GS = $(DOCKER) gs
+
 ASSET_DIR = assets
 RECIPE_DIR = recipes
 IMAGES_DIR = images
@@ -23,11 +28,11 @@ $(CSS): $(SCSS)
 	scss $< $@
 
 $(TEMP_DIR)/%.html: $(RECIPE_DIR)/%.md $(FILTER) $(CARD_TEMPLATE)
-	pandoc --standalone --section-divs --filter $(FILTER) --template $(CARD_TEMPLATE) --variable image_path:$(IMAGE_PATH) --to html5 --output $@ $<
+	$(PANDOC) --standalone --section-divs --filter $(FILTER) --template $(CARD_TEMPLATE) --variable image_path:$(IMAGE_PATH) --to html5 --output $@ $<
 
 $(CARDS_DIR)/%.pdf: $(TEMP_DIR)/%.html $(CSS)
-	prince --style $(CSS) --output $@ $<
-	./nup.bash $@
+	$(PRINCE) --style $(CSS) --output $@ $<
+	#./nup.bash $@
 
 clean:
 	rm -f $(HTMLS) $(PDFS)
@@ -36,3 +41,6 @@ clean:
 
 debug:
 	$(info $(HTMLS_FOR_INDEX))
+
+docker:
+	docker image build --tag recipe .
