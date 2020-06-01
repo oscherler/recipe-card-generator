@@ -27,8 +27,11 @@ cards: $(PDFS)
 $(CSS): $(SCSS)
 	scss $< $@
 
-$(TEMP_DIR)/%.html: $(RECIPE_DIR)/%.md $(INT_TEMPLATE)
+$(TEMP_DIR)/%.int.html: $(RECIPE_DIR)/%.md $(INT_TEMPLATE)
 	$(PANDOC) --standalone --section-divs --template $(INT_TEMPLATE) --variable image_path:$(IMAGE_PATH) --to html5 --output $@ $<
+
+$(TEMP_DIR)/%.html: $(TEMP_DIR)/%.int.html $(ASSET_DIR)/intermediate.py
+	python $(ASSET_DIR)/intermediate.py $< $@
 
 $(CARDS_DIR)/%.pdf: $(TEMP_DIR)/%.html $(CSS)
 	$(DOCKER) prince --style $(CSS) --output $@ $<
