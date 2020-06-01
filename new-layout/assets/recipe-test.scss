@@ -1,0 +1,176 @@
+$accent: #004080;
+$semibold: 600;
+
+@page
+{
+	size: a6;
+	margin: 7mm;
+}
+
+body
+{
+	font-family: Baskerville;
+	font-size: 9pt;
+}
+
+header .title
+{
+	position: relative;
+
+	font-size: 24pt;
+	font-weight: normal;
+
+	text-align: center;
+
+	color: $accent;
+	
+	border: 2pt $accent;
+	border-style: solid none;
+	
+	box-sizing: border-box;
+	height: 37mm;
+	
+	margin: 0 0 7mm 0;
+
+	.content
+	{
+		display: block;
+		position: absolute;
+
+		top: 50%;
+		left: 0;
+		right: 0;
+
+		transform: translatey( -50% );
+	}
+}
+
+
+header .title-image-container
+{
+	position: relative;
+
+	height: 90mm;
+	overflow: hidden;
+	
+	.title-image
+	{
+		display: block;
+
+		position: absolute;
+
+		top: 50%;
+		left: 50%;
+
+		transform: translate( -50%, -50% );
+		
+		&.fit,
+		&.fit-both
+		{
+			max-width: 100%;
+			max-height: 100%;
+		}
+		
+		&.fit-width
+		{
+			width: 100%;
+			height: auto;
+		}
+		
+		&.fit-height
+		{
+			width: auto;
+			height: 100%;
+		}
+	}
+}
+
+h1
+{
+	font-size: 12pt;
+	font-weight: $semibold;
+	
+	margin: 1em 0;
+	
+	color: $accent;
+	
+	padding-bottom: 3.8pt;
+	border-bottom: 1pt solid $accent;
+}
+
+.ingredients
+{
+	body.long &
+	{
+		page-break-after: always;
+	}
+	
+	table
+	{
+        border-spacing: 0 3mm;
+
+		td
+		{
+			vertical-align: top;
+		}
+
+		tr > td:first-child
+		{
+			padding-right: 0.5em;
+			text-align: center;
+			white-space: nowrap;
+
+			font-weight: $semibold;
+			color: $accent;
+		}
+		
+		tr > td:nth-child(3)
+		{
+            width: 57mm;
+            padding-left: 2mm;
+            border-left: 1px solid #888;
+
+		}
+		
+		p
+		{
+			margin: 0 0 1em 0;
+		}
+	}
+}
+
+.directions
+{
+	ul
+	{
+		margin: 0;
+		padding: 0 0 0 1em;
+		
+		list-style-type: square;
+		
+		li
+		{
+			margin: 0.5em 0;
+			padding: 0;
+			
+			&::marker
+			{
+				width: 1em;
+				padding: 0;
+				text-align: left;
+
+				color: $accent;
+			}
+			
+			p
+			{
+				margin: 0.5em 0;
+				
+				&:first-child
+				{
+					margin: 0;
+				}
+			}
+		}
+	}
+}

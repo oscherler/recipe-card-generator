@@ -11,7 +11,7 @@ IMAGES_DIR = images
 TEMP_DIR = tmp
 CARDS_DIR = cards
 
-CSS_NAME = recipe
+CSS_NAME = recipe-test
 SCSS = $(ASSET_DIR)/$(CSS_NAME).scss
 CSS = $(ASSET_DIR)/$(CSS_NAME).css
 INT_TEMPLATE = $(ASSET_DIR)/recipe.int.html
@@ -38,10 +38,13 @@ $(TEMP_DIR)/%.html: $(TEMP_DIR)/%.int.html $(ASSET_DIR)/intermediate.py
 $(CARDS_DIR)/%.pdf: $(TEMP_DIR)/%.html $(CSS)
 	$(DOCKER) prince --style $(CSS) --output $@ $<
 
+test:
+	$(DOCKER) prince --style $(CSS) --output cards/pancakes-side-test.pdf tmp/pancakes-side-test.html
+
 clean:
 	rm -f $(HTMLS) $(PDFS)
 
-.PRECIOUS: $(TEMP_DIR)/%.html
+.PRECIOUS: $(TEMP_DIR)/%.int.html $(TEMP_DIR)/%.html
 
 docker:
 	docker image build --tag recipe .

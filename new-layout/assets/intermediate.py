@@ -2,39 +2,34 @@
 
 import sys
 import os
-import xml.etree.ElementTree as ET
+from lxml import etree as ET
 from copy import deepcopy
 
 XHTML = 'http://www.w3.org/1999/xhtml'
 
 XHTML_BODY = '{' + XHTML + '}body'
+XHTML_SECTION = '{' + XHTML + '}section'
 XHTML_UL = '{' + XHTML + '}ul'
 XHTML_HR = '{' + XHTML + '}hr'
 XHTML_EM = '{' + XHTML + '}em'
 
-ns = {
-    'x': XHTML,
-}
-
-ET.register_namespace( '', XHTML )
-# ET.register_namespace( 'xlink', XLINK )
-
-file_path = sys.argv[1]
+input_path = sys.argv[1]
 output_path = sys.argv[2]
 
-tree = ET.parse( file_path )
+tree = ET.parse( input_path )
 root = tree.getroot()
-body = root.find( XHTML_BODY )
+steps = root.find( XHTML_BODY + '/' + XHTML_SECTION + '[@class="steps"]' )
 
-out_html = ET.Element('html')
-doc = ET.ElementTree( out_html )
+out_steps = ET.Element('section')
+out_steps.attrib['id'] = 'ingredients'
+out_steps.attrib['class'] = 'level1 ingredients'
 
-out_body = ET.SubElement( out_html, 'body' )
-table = ET.SubElement( out_body, 'table', border='1' )
+table = ET.SubElement( out_steps, 'table' )
+tbody = ET.SubElement( table, 'tbody' )
 
 new_step = True
 
-for el in body:
+for el in steps:
     # <hr> is the step separator
     if el.tag == XHTML_HR:
         new_step = True
@@ -42,7 +37,7 @@ for el in body:
 
     # if a step doesn’t start with a <ul>, it’s a step without ingredients
     if new_step and el.tag != XHTML_UL:
-        row = ET.SubElement( table, 'tr' )
+        row = ET.SubElement( tbody, 'tr' )
         step_cell = ET.SubElement( row, 'td', colspan='3' )
         step_cell.append( deepcopy( el ) )
         continue
@@ -54,7 +49,7 @@ for el in body:
 
         first = True
         for ingredient in el:
-            row = ET.SubElement( table, 'tr' )
+            row = ET.SubElement( tbody, 'tr' )
             quantity_cell = ET.Element('td')
             ingredient_cell = ET.SubElement( row, 'td' )
             has_quantity = False
@@ -92,4 +87,8 @@ for el in body:
 
     new_step = False
 
-doc.write( output_path )
+parent = steps.getparent()
+parent.insert( parent.index( steps ), out_steps )
+steps.getparent().remove( steps )
+
+tree.write( output_path )
