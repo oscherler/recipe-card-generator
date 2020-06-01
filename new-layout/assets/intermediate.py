@@ -23,56 +23,43 @@ tree = ET.parse( file_path )
 root = tree.getroot()
 body = root.find( XHTML_BODY )
 
+out_html = ET.Element('html')
+doc = ET.ElementTree( out_html )
 
-# Create the root element
-page = ET.Element('html')
-# Make a new document tree
-doc = ET.ElementTree( page )
-
-# Add the subelements
-pageElement = ET.SubElement( page, 'body' )
-
-table = ET.Element('table')
-table.attrib['border'] = '1'
-
-pageElement.append( table )
+out_body = ET.SubElement( out_html, 'body' )
+table = ET.SubElement( out_body, 'table', border='1' )
 
 new_step = True
 
 for el in body:
+    # <hr> is the step separator
     if el.tag == XHTML_HR:
         new_step = True
         continue
 
+    # if a step doesn't start with a <ul>, it's a step without ingredients
     if new_step and el.tag != XHTML_UL:
-        row = ET.Element('tr')
-        step_cell = ET.Element('td')
-        step_cell.attrib['colspan'] = '2'
-        table.append( row )
-        row.append( step_cell )
+        row = ET.SubElement( table, 'tr' )
+
+        step_cell = ET.SubElement( row, 'td', colspan='2' )
         step_cell.append( deepcopy( el ) )
         continue
 
+    # <ul>: ingredients
     if el.tag == XHTML_UL:
-        num_ingredients = len( el )
-        step_cell = ET.Element('td')
-        step_cell.attrib['rowspan'] = str( num_ingredients )
+        # span the text <td> on all the ingredient rows
+        step_cell = ET.Element('td', rowspan=str( len( el ) ))
 
         first = True
         for ingredient in el:
-            row = ET.Element('tr')
+            row = ET.SubElement( table, 'tr' )
+            ingredient_cell = ET.SubElement( row, 'td' )
 
-            ingredient_cell = ET.Element('td')
-
-            for toto in ingredient:
-                ingredient_cell.append( deepcopy( toto ) )
-
-            row.append( ingredient_cell )
+            for ingredient_el in ingredient:
+                ingredient_cell.append( deepcopy( ingredient_el ) )
 
             if first:
                 row.append( step_cell )
-
-            table.append( row )
 
             first = False
 
