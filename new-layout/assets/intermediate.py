@@ -38,20 +38,20 @@ for el in steps:
     # if a step doesn’t start with a <ul>, it’s a step without ingredients
     if new_step and el.tag != XHTML_UL:
         row = ET.SubElement( tbody, 'tr' )
-        step_cell = ET.SubElement( row, 'td', colspan='3' )
+        step_cell = ET.SubElement( row, 'td', colspan='3', Class='step' )
         step_cell.append( deepcopy( el ) )
         continue
 
     # <ul>: ingredients
     if el.tag == XHTML_UL:
         # span the text <td> on all the ingredient rows
-        step_cell = ET.Element('td', rowspan=str( len( el ) ))
+        step_cell = ET.Element( 'td', rowspan=str( len( el ) ), Class='steps' )
 
         first = True
         for ingredient in el:
             row = ET.SubElement( tbody, 'tr' )
-            quantity_cell = ET.Element('td')
-            ingredient_cell = ET.SubElement( row, 'td' )
+            quantity_cell = ET.Element( 'td', Class='quantity' )
+            ingredient_cell = ET.SubElement( row, 'td', Class='ingredient' )
             has_quantity = False
 
             if len( ingredient ) == 0:
