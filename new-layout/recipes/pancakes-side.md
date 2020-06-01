@@ -25,7 +25,7 @@ In a small bowl, whisk together flour, sugar, baking powder, and salt; set aside
 -----
 
 * _1 cup_ Milk
-* _30 g_ Butter, melted, or vegetable oil
+* _30 g_ Butter, **melted**, or vegetable oil
 * _1_ Large egg
 
 In a medium bowl, whisk together milk, butter (or oil), and egg. Add dry ingredients to milk mixture; whisk until just moistened (do not overmix; a few small lumps are fine).

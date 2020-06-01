@@ -1,3 +1,5 @@
+# -*- coding: utf8 -*-
+
 import sys
 import os
 import xml.etree.ElementTree as ET
@@ -8,6 +10,7 @@ XHTML = 'http://www.w3.org/1999/xhtml'
 XHTML_BODY = '{' + XHTML + '}body'
 XHTML_UL = '{' + XHTML + '}ul'
 XHTML_HR = '{' + XHTML + '}hr'
+XHTML_EM = '{' + XHTML + '}em'
 
 ns = {
     'x': XHTML,
@@ -37,11 +40,10 @@ for el in body:
         new_step = True
         continue
 
-    # if a step doesn't start with a <ul>, it's a step without ingredients
+    # if a step doesn’t start with a <ul>, it’s a step without ingredients
     if new_step and el.tag != XHTML_UL:
         row = ET.SubElement( table, 'tr' )
-
-        step_cell = ET.SubElement( row, 'td', colspan='2' )
+        step_cell = ET.SubElement( row, 'td', colspan='3' )
         step_cell.append( deepcopy( el ) )
         continue
 
@@ -53,11 +55,32 @@ for el in body:
         first = True
         for ingredient in el:
             row = ET.SubElement( table, 'tr' )
+            quantity_cell = ET.Element('td')
             ingredient_cell = ET.SubElement( row, 'td' )
+            has_quantity = False
 
-            for ingredient_el in ingredient:
-                ingredient_cell.append( deepcopy( ingredient_el ) )
+            if len( ingredient ) == 0:
+                # no sub elements, just text, so no quantity
+                ingredient_cell.text = ingredient.text
+            else:
+                # sub elements, check for <em> for quantity
+                for ingredient_el in ingredient:
+                    if ingredient_el.tag == XHTML_EM:
+                        has_quantity = True
 
+                        # text after last element is in last element tail, move it so ingredient text
+                        ingredient_cell.text = ingredient_el.tail
+                        ingredient_el.tail = None
+
+                        # insert quantity cell before ingredient cell
+                        quantity_cell.append( deepcopy( ingredient_el ) )
+                        row.insert( 0, quantity_cell )
+                    else:
+                        ingredient_cell.append( deepcopy( ingredient_el ) )
+                    
+            if not has_quantity:
+                ingredient_cell.attrib['colspan'] = '2'
+            
             if first:
                 row.append( step_cell )
 
