@@ -48,6 +48,7 @@ for el in steps:
         row = ET.SubElement( tbody, 'tr' )
         step_cell = ET.SubElement( row, 'td', colspan='3', Class='step' )
         step_cell.append( deepcopy( el ) )
+        new_step = False
         continue
 
     # <ul>: ingredients
