@@ -11,7 +11,7 @@ IMAGES_DIR = images
 TEMP_DIR = tmp
 CARDS_DIR = cards
 
-CSS_NAME = recipe-test
+CSS_NAME = recipe-side
 SCSS = $(ASSET_DIR)/$(CSS_NAME).scss
 CSS = $(ASSET_DIR)/$(CSS_NAME).css
 INT_TEMPLATE = $(ASSET_DIR)/recipe.int.html
