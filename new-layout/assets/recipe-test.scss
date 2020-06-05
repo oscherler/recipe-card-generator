@@ -143,6 +143,11 @@ table
 		padding-left: 2mm;
 		border-left: 1px solid #888;
 	}
+	
+	tr.spacer > td
+	{
+		height: 2mm;
+	}
 }
 
 .directions

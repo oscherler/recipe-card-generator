@@ -28,12 +28,20 @@ table = ET.SubElement( out_steps, 'table' )
 tbody = ET.SubElement( table, 'tbody' )
 
 new_step = True
+beginning = True
 
 for el in steps:
     # <hr> is the step separator
+    # it’s optional, <ul> also starts a new step
     if el.tag == XHTML_HR:
         new_step = True
         continue
+
+    if new_step and not beginning:
+        row = ET.SubElement( tbody, 'tr', Class='spacer' )
+        ET.SubElement( row, 'td', colspan='3' )
+
+    beginning = False
 
     # if a step doesn’t start with a <ul>, it’s a step without ingredients
     if new_step and el.tag != XHTML_UL:
