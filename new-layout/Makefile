@@ -2,6 +2,8 @@ DOCKER = docker run --rm --volume "$(shell pwd):/data" recipe:latest
 PANDOC = $(DOCKER) pandoc
 PRINCE = $(DOCKER) prince
 GS = $(DOCKER) gs
+PYTHON = ../venv/bin/python
+PIP = ../venv/bin/pip
 
 ASSET_DIR = assets
 RECIPE_DIR = recipes
@@ -31,7 +33,7 @@ $(TEMP_DIR)/%.int.html: $(RECIPE_DIR)/%.md $(INT_TEMPLATE)
 	$(PANDOC) --standalone --section-divs --template $(INT_TEMPLATE) --variable image_path:$(IMAGE_PATH) --to html5 --output $@ $<
 
 $(TEMP_DIR)/%.html: $(TEMP_DIR)/%.int.html $(ASSET_DIR)/intermediate.py
-	python $(ASSET_DIR)/intermediate.py $< $@
+	$(PYTHON) $(ASSET_DIR)/intermediate.py $< $@
 
 $(CARDS_DIR)/%.pdf: $(TEMP_DIR)/%.html $(CSS)
 	$(DOCKER) prince --style $(CSS) --output $@ $<
@@ -43,3 +45,7 @@ clean:
 
 docker:
 	docker image build --tag recipe .
+
+venv:
+	python3 -mvenv ../venv
+	$(PIP) install -r ../requirements.txt
