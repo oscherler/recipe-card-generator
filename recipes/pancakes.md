@@ -20,7 +20,7 @@ Preheat oven to 95 °C; have a baking sheet or heatproof platter ready to keep 
 * _2 tsp_ Baking powder
 * _1/2 tsp_ Salt
 
-In a small bowl, whisk together flour, sugar, baking powder, and salt; set aside.
+Whisk together in a small bowl; set aside.
 
 -----
 
